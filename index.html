@@ -286,4 +286,208 @@ $("dateForm").addEventListener("submit",e=>{e.preventDefault();const title=$("da
 $("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify({app:"Our Little Love Story",exportedAt:new Date().toISOString(),memories:read()},null,2)],{type:"application/json"});const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="our-little-love-story-backup.json";a.click();URL.revokeObjectURL(u);toast("Your memory backup is ready. ♡")});
 ratingButtons();initHearts();render();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 </script>
+
+<style>
+  /* Keep the scrapbook locked until access is verified */
+  body:not(.portal-unlocked) .app {
+    filter: blur(14px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  #love-gate {
+    display: flex;
+    opacity: 1;
+  }
+
+  body.portal-unlocked #love-gate {
+    display: none;
+  }
+
+  body.portal-unlocked .app {
+    filter: none;
+    pointer-events: auto;
+    user-select: auto;
+    transition: filter .8s ease;
+  }
+
+  #portal-password-wrap {
+    position: relative;
+  }
+
+  #portal-password-wrap input {
+    padding-right: 52px;
+  }
+
+  #portal-password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: #a64d80;
+    padding: 8px;
+  }
+
+  .portal-unlock:disabled {
+    opacity: .7;
+    cursor: wait;
+  }
+</style>
+
+<script>
+(() => {
+  const SUPABASE_URL = "https://fpeskurhhchnitbvckut.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_o0pAGatRV_Qn1h5Vt5UA3Q_iYU5-EE2";
+
+  const gate = document.getElementById("love-gate");
+  const form = document.getElementById("portal-login");
+  const email = document.getElementById("portal-email");
+  const password = document.getElementById("portal-password");
+  const errorBox = document.getElementById("portal-error");
+  const unlockButton = form.querySelector('button[type="submit"]');
+
+  if (!gate || !form || !window.supabase) {
+    if (errorBox) errorBox.textContent =
+      "Our portal couldn't start. Please refresh and try again. 💗";
+    return;
+  }
+
+  // Start locked. Never trust a saved browser flag for access.
+  document.body.classList.remove("portal-unlocked");
+  gate.classList.add("active");
+
+  const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
+  );
+
+  let checking = false;
+
+  function lockPortal(message = "") {
+    document.body.classList.remove("portal-unlocked");
+    gate.classList.add("active");
+    errorBox.textContent = message;
+  }
+
+  function unlockPortal() {
+    errorBox.textContent = "";
+    document.body.classList.add("portal-unlocked");
+    gate.classList.remove("active");
+  }
+
+  async function verifyMember(user) {
+    if (checking) return;
+    checking = true;
+
+    try {
+      const { data, error } = await client
+        .from("couple_members")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!data) {
+        await client.auth.signOut();
+        lockPortal("This little world is reserved for our two approved accounts. 💗");
+        return;
+      }
+
+      unlockPortal();
+    } catch (error) {
+      lockPortal(
+        "We couldn't verify your access. Please try again. 💗"
+      );
+      console.error("Portal access verification failed:", error.message);
+    } finally {
+      checking = false;
+    }
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    errorBox.textContent = "";
+    unlockButton.disabled = true;
+    unlockButton.textContent = "✨ Opening our little world…";
+
+    try {
+      const { data, error } = await client.auth.signInWithPassword({
+        email: email.value.trim(),
+        password: password.value
+      });
+
+      if (error) throw error;
+
+      if (!data.user) {
+        throw new Error("No user was returned.");
+      }
+
+      await verifyMember(data.user);
+    } catch (error) {
+      lockPortal(
+        error.message?.includes("Email not confirmed")
+          ? "Please confirm your email before entering. 💌"
+          : "That key didn't unlock our world. Check your email and password. 💗"
+      );
+    } finally {
+      unlockButton.disabled = false;
+      unlockButton.textContent = "♥  Unlock Our Memories  →";
+    }
+  });
+
+  // Restore an existing Supabase session, but verify membership again.
+  client.auth.getSession().then(({ data, error }) => {
+    if (error) {
+      lockPortal("Please sign in again to open our memories. 💗");
+      return;
+    }
+
+    if (data.session?.user) {
+      verifyMember(data.session.user);
+    } else {
+      lockPortal();
+    }
+  });
+
+  client.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_OUT") {
+      lockPortal();
+    }
+  });
+
+  // Add a functional show/hide password control.
+  const passwordWrap = document.createElement("div");
+  passwordWrap.id = "portal-password-wrap";
+  password.parentNode.insertBefore(passwordWrap, password);
+  passwordWrap.appendChild(password);
+
+  const toggle = document.createElement("button");
+  toggle.id = "portal-password-toggle";
+  toggle.type = "button";
+  toggle.textContent = "👁";
+  toggle.setAttribute("aria-label", "Show password");
+  passwordWrap.appendChild(toggle);
+
+  toggle.addEventListener("click", () => {
+    const showing = password.type === "text";
+    password.type = showing ? "password" : "text";
+    toggle.textContent = showing ? "👁" : "🙈";
+    toggle.setAttribute(
+      "aria-label",
+      showing ? "Show password" : "Hide password"
+    );
+  });
+})();
+</script>
 </body></html>
