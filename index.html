@@ -472,6 +472,10 @@ function lockPortal(message = "") {
   document.body.classList.remove("portal-unlocked");
   gate.classList.add("active");
   errorBox.textContent = message;
+  const cloudStatus = document.getElementById("cloudSyncStatus");
+if (cloudStatus) {
+  cloudStatus.textContent = "♡ Sign in to connect";
+}
 
   const logoutButton = document.getElementById("portal-logout");
   if (logoutButton) {
@@ -485,6 +489,10 @@ function unlockPortal() {
   errorBox.textContent = "";
   document.body.classList.add("portal-unlocked");
   gate.classList.remove("active");
+  const cloudStatus = document.getElementById("cloudSyncStatus");
+if (cloudStatus) {
+  cloudStatus.textContent = "♡ Account verified · sync not enabled";
+}
 
   let logoutButton = document.getElementById("portal-logout");
 
