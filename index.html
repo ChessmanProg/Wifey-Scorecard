@@ -195,6 +195,84 @@ button,input,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-c
 }
 
 
+/* ✨ Magical portal light trails and floating sparkles */
+#love-gate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: .85;
+  background:
+    radial-gradient(circle at 32% 28%, #fff 0 1px, transparent 3px),
+    radial-gradient(circle at 76% 19%, #fff5ce 0 2px, transparent 5px),
+    radial-gradient(circle at 21% 68%, #ffd6f4 0 2px, transparent 5px),
+    radial-gradient(circle at 82% 74%, #fff 0 1px, transparent 4px),
+    radial-gradient(circle at 14% 42%, #ffe5f7 0 2px, transparent 5px),
+    radial-gradient(circle at 91% 48%, #fff0c4 0 2px, transparent 5px);
+  animation: portalTwinkles 4s ease-in-out infinite alternate;
+}
+
+.portal-frame::before,
+.portal-frame::after {
+  content: "✦  ·  ♡  ·  ✧";
+  position: absolute;
+  z-index: 2;
+  color: #fff8d8;
+  font-size: 21px;
+  letter-spacing: 9px;
+  text-shadow:
+    0 0 6px white,
+    0 0 16px #ff91df,
+    0 0 28px #f4a4ff;
+  pointer-events: none;
+  animation: portalSparkleDrift 5s ease-in-out infinite;
+}
+
+.portal-frame::before {
+  top: 17%;
+  left: -38px;
+}
+
+.portal-frame::after {
+  right: -45px;
+  bottom: 18%;
+  animation-delay: -2.5s;
+}
+
+.portal-card {
+  overflow: visible;
+}
+
+@keyframes portalTwinkles {
+  from {
+    opacity: .35;
+    filter: brightness(.9);
+  }
+  to {
+    opacity: 1;
+    filter: brightness(1.35);
+  }
+}
+
+@keyframes portalSparkleDrift {
+  0%, 100% {
+    transform: translateY(0) rotate(-8deg) scale(.9);
+    opacity: .55;
+  }
+  50% {
+    transform: translateY(-16px) rotate(10deg) scale(1.2);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #love-gate::after,
+  .portal-frame::before,
+  .portal-frame::after {
+    animation: none;
+  }
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
