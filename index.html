@@ -337,7 +337,24 @@ button,input,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-c
 <header class="topbar"><div class="brand"><div class="brand-mark">♡</div><div><div class="brand-name">Our Little Love Story</div><div class="brand-sub">A SCRAPBOOK FOR TWO</div></div></div><div class="pill">made with ♥ for us</div></header>
 <section class="hero"><div class="eyebrow">♡ our little corner of forever</div><h1>Every date,<br>another love note.</h1><p>A tiny place for our favorite dates, silly moments, pretty pictures, and all the little things that make our love ours.</p><div class="actions"><button class="btn btn-primary" id="newDateBtn">＋ Add a date memory ♡</button><button class="btn btn-soft" id="surpriseBtn">✧ Send a little love</button></div></section>
 <section class="stats" aria-label="Memory statistics"><div class="stat"><div class="emoji">💌</div><strong id="dateCount">0</strong><span>little memories</span></div><div class="stat"><div class="emoji">⭐</div><strong id="avgScore">—</strong><span>our date average</span></div><div class="stat"><div class="emoji">📸</div><strong id="photoCount">0</strong><span>moments captured</span></div></section>
-<section><div class="section-head"><div><h2>Our memory lane</h2><p>Every little moment belongs here.</p></div><button class="btn btn-soft" id="exportBtn">♡ Backup</button></div><div class="memory-grid" id="memoryGrid"></div></section>
+
+<section>
+  <div class="section-head">
+    <div>
+      <h2>Our memory lane</h2>
+      <p>Every little moment belongs here.</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span id="cloudSyncStatus" role="status" aria-live="polite"
+        style="font-size:12px;color:#9e4c6d;background:#fff5fa;border:1px solid #f3ccda;border-radius:999px;padding:8px 11px">
+        ♡ Cloud not connected
+      </span>
+      <button class="btn btn-soft" id="exportBtn">♡ Backup</button>
+    </div>
+  </div>
+  <div class="memory-grid" id="memoryGrid"></div>
+</section>
+
 <div class="footer">“In a world of everything, I'd still choose you.” ♡</div><p class="fine-print" style="text-align:center">Starter version: memories are saved in this browser only. Private accounts and cloud sync will be connected in a later step.</p>
 </main>
 <div class="overlay" id="dateOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-head"><div><h2 id="modalTitle">A new little memory ♡</h2><p>Let's keep this moment forever.</p></div><button class="close" id="closeModal" aria-label="Close">×</button></div>
