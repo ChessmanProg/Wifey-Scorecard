@@ -605,7 +605,8 @@ if (cloudStatus) {
       lockPortal();
     }
   });
-
+// Share the existing authenticated client with future scrapbook features.
+window.loveStorySupabase = client;
   client.auth.onAuthStateChange((event) => {
     if (event === "SIGNED_OUT") {
       lockPortal();
