@@ -450,17 +450,60 @@ ratingButtons();initHearts();render();if("serviceWorker"in navigator&&location.p
 
   let checking = false;
 
-  function lockPortal(message = "") {
-    document.body.classList.remove("portal-unlocked");
-    gate.classList.add("active");
-    errorBox.textContent = message;
+
+function lockPortal(message = "") {
+  document.body.classList.remove("portal-unlocked");
+  gate.classList.add("active");
+  errorBox.textContent = message;
+
+  const logoutButton = document.getElementById("portal-logout");
+  if (logoutButton) {
+    logoutButton.style.display = "none";
+  }
+}
+
+
+
+function unlockPortal() {
+  errorBox.textContent = "";
+  document.body.classList.add("portal-unlocked");
+  gate.classList.remove("active");
+
+  let logoutButton = document.getElementById("portal-logout");
+
+  if (!logoutButton) {
+    logoutButton = document.createElement("button");
+    logoutButton.id = "portal-logout";
+    logoutButton.type = "button";
+    logoutButton.textContent = "♡ Log Out";
+    logoutButton.style.cssText =
+      "position:fixed;top:18px;right:18px;z-index:1000;" +
+      "padding:11px 17px;border:1px solid #f3ccda;" +
+      "border-radius:999px;background:#fff5fa;color:#9e4c6d;" +
+      "font:700 13px inherit;box-shadow:0 4px 18px #d96e9633;" +
+      "cursor:pointer;";
+
+    logoutButton.addEventListener("click", async () => {
+      logoutButton.disabled = true;
+      logoutButton.textContent = "Logging out…";
+
+      const { error } = await client.auth.signOut();
+
+      if (error) {
+        logoutButton.disabled = false;
+        logoutButton.textContent = "♡ Log Out";
+        toast("Couldn't log out. Please try again. 💗");
+      } else {
+        lockPortal("You've left our little world. See you soon! 💗");
+      }
+    });
+
+    document.body.appendChild(logoutButton);
   }
 
-  function unlockPortal() {
-    errorBox.textContent = "";
-    document.body.classList.add("portal-unlocked");
-    gate.classList.remove("active");
-  }
+  logoutButton.style.display = "block";
+}
+
 
   async function verifyMember(user) {
     if (checking) return;
