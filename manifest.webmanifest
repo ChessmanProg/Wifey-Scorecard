@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Our Little Love Story",
+  "short_name": "Love Story",
+  "description": "A tiny scrapbook for our dates, memories, and forever kind of love.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8f7",
+  "theme_color": "#fff0f5",
+  "categories": ["lifestyle", "entertainment"],
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
