@@ -198,6 +198,59 @@ button,input,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-c
 </style>
 </head>
 <body>
+
+<div id="love-gate" role="dialog" aria-modal="true" aria-labelledby="portal-title">
+  <div class="portal-frame">
+    <div class="portal-card">
+      <div class="portal-heart" aria-hidden="true">♥</div>
+
+      <h2 class="portal-title" id="portal-title">
+        Our Little<br>Love Story
+      </h2>
+
+      <p class="portal-subtitle">
+        Every love story has a key.<br>
+        This one is ours. ♡
+      </p>
+
+      <form id="portal-login" autocomplete="on">
+        <div class="portal-field">
+          <input
+            id="portal-email"
+            type="email"
+            placeholder="♡  Your email address"
+            aria-label="Email address"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="portal-field">
+          <input
+            id="portal-password"
+            type="password"
+            placeholder="♡  Your secret key"
+            aria-label="Password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button class="portal-unlock" type="submit">
+          ♥ &nbsp; Unlock Our Memories &nbsp; →
+        </button>
+
+        <div class="portal-error" id="portal-error" role="status" aria-live="polite"></div>
+      </form>
+
+      <p class="portal-note">
+        ♥ &nbsp; Only our two approved accounts can enter.<br>
+        <span aria-hidden="true">∞</span>
+      </p>
+    </div>
+  </div>
+</div>
+
 <div class="floating-hearts" id="floatingHearts" aria-hidden="true"></div>
 <main class="app">
 <header class="topbar"><div class="brand"><div class="brand-mark">♡</div><div><div class="brand-name">Our Little Love Story</div><div class="brand-sub">A SCRAPBOOK FOR TWO</div></div></div><div class="pill">made with ♥ for us</div></header>
